@@ -1,0 +1,30 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+  <h4 class="card-header">Customers ({{customers.length}})</h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="customers.length === 0">
+        <tr>
+          <td colspan="4">There are no customers in the DB.</td>
+        </tr>  
+      </tbody>
+      <tbody>
+        <tr *ngFor="let customer of customers">
+          <td>{{customer.name}}</td>
+          <td>{{customer.address}}</td>
+          <td>{{customer.phone}}</td>
+        </tr>  
+      </tbody>
+    </table>
+  </div>
+</div>
