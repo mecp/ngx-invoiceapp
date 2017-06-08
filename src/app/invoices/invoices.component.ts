@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-// import { InvoiceService } from '../services/invoice.service';
+import { InvoiceService } from '../services/invoice.service';
 import { ToastComponent } from '../shared/toast/toast.component';
 
 @Component({
@@ -12,20 +12,20 @@ import { ToastComponent } from '../shared/toast/toast.component';
 })
 export class InvoicesComponent implements OnInit {
 
-  // invoices = [];
-  // isLoading = true;
+  invoices = [];
+  isLoading = true;
 
-  // constructor(private invoiceService: InvoiceService, public toast: ToastComponent) { }
+  constructor(private invoiceService: InvoiceService, public toast: ToastComponent) { }
 
   ngOnInit() {
-    // this.getInvoices();
+    this.getInvoices();
   }
 
-  // getInvoices() {
-  //   this.invoiceService.getInvoices().subscribe(
-  //     data => this.invoices = data,
-  //     error => console.log(error),
-  //     () => this.isLoading = false
-  //   );
-  // }
+  getInvoices() {
+    this.invoiceService.getInvoices().subscribe(
+      data => this.invoices = data,
+      error => console.log(error),
+      () => this.isLoading = false
+    );
+  }
 }

@@ -4,9 +4,11 @@ import { RoutingModule } from './routing.module';
 import { SharedModule } from './shared/shared.module';
 import { ProductService } from './services/product.service';
 import { CustomerService } from './services/customer.service';
+import { InvoiceService } from './services/invoice.service';
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import { CustomersComponent } from './customers/customers.component';
+import { InvoicesComponent } from './invoices/invoices.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
@@ -14,6 +16,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     AppComponent,
     ProductsComponent,
     CustomersComponent,
+    InvoicesComponent,
     NotFoundComponent
   ],
   imports: [
@@ -22,7 +25,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
   ],
   providers: [
     ProductService,
-    CustomerService
+    CustomerService,
+    InvoiceService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
