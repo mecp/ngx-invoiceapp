@@ -15,4 +15,8 @@ export class CustomerService {
   getCustomers(): Observable<any> {
     return this.http.get('/api/customers').map(res => res.json());
   }
+
+  getCustomer(id: string): Observable<any> {
+    return this.http.get(`/api/customers/${id}`).map(res => res.json());
+  }
 }

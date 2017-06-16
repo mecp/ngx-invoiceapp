@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import { CustomersComponent } from './customers/customers.component';
 import { InvoicesComponent } from './invoices/invoices.component';
+import { InvoiceComponent } from './invoices/invoice.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
@@ -11,6 +12,8 @@ const routes: Routes = [
   { path: 'customers', component: CustomersComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'invoices', component: InvoicesComponent },
+  { path: 'invoice', component: InvoiceComponent },
+  { path: 'invoice/:id', component: InvoiceComponent },
   { path: 'notfound', component: NotFoundComponent },
   { path: '**', redirectTo: '/notfound' },
 ];

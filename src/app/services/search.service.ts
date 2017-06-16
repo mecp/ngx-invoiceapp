@@ -5,18 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class ProductService {
+export class SearchService {
 
   private headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
   private options = new RequestOptions({ headers: this.headers });
 
   constructor(private http: Http) { }
 
-  getProducts(): Observable<any> {
-    return this.http.get('/api/products').map(res => res.json());
-  }
-
-  getProduct(id): Observable<any> {
-    return this.http.get(`/api/products/${id}`).map(res => res.json());
+  search(q: string, resourceType: string): Observable<any> {
+    return this.http.get(`/api/search?q=${q}&resourceType=${resourceType}`).map(res => res.json());
   }
 }

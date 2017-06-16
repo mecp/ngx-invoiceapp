@@ -1,0 +1,94 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+    <div class="card-heading clearfix">
+        <h4 class="card-header pull-left" style="padding-top: 7.5px;"> {{ formTitle }} </h4>
+        <div class="btn-group pull-right">
+            <a class="btn btn-sm btn-primary" routerLink="/invoices"> &larr; List Invoices</a>
+        </div>
+    </div>
+
+    <div class="card-block">
+        <form class="inv-form" [formGroup]="myForm" novalidate>
+            <div class="form-group">
+                <label for="custInfo">Customer:</label>
+                <div [hidden]="!isInfo">
+                    <input formControlName="custInfo" type="text" class="form-control" [(ngModel)]="customerName">
+                </div>
+                <div [hidden]="isInfo">
+                    <label for="typeahead-template-c">Search for a customer:</label>
+                    <input id="typeahead-template-c" type="text" class="form-control" [(ngModel)]="custSearchModel" [ngbTypeahead]="searchCustomer"
+                        [resultTemplate]="crt" [inputFormatter]="formatter" formControlName="customer" (selectItem)="customerSelected($event)"/>
+                    <small [hidden]="myForm.controls.customer.valid || (myForm.controls.customer.pristine)" class="text-danger">
+                        Customer is required.
+                    </small>
+                    <ng-template #crt let-r="result" let-t="term">
+                        <span><i class="fa fa-person"></i> {{ r.name }}</span>
+                        <span><i>Id: </i> {{ r.id }} </span>
+                        <span><i>Address: </i> {{ r.address }} </span>
+                        <span><i>Phone: </i> {{ r.phone }} </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="items">Items:</label>
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-default">
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of invoiceItems">
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.product.price }}</td>
+                            <td>
+                                <input #qty formControlName="item{{item.product.id}}" type="number" class="form-control" [(ngModel)]="item.quantity">
+                                <small [hidden]="isQuantityValid(item) || isInfo" class="text-danger">
+                                    Quantity is required and should be more than 0.
+                                </small>
+                            </td>
+                            <td>{{ item.product.price * item.quantity }}</td>
+                            <td><button [disabled]="isInfo" class="btn btn-sm btn-danger" (click)="delete(item)"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Discount</strong></td>
+                            <td>
+                                <input formControlName="discount" type="number" class="form-control" [(ngModel)]="discount">
+                                <small [hidden]="myForm.controls.discount.valid || (myForm.controls.discount.pristine) || isInfo" class="text-danger">
+                                    Discount should be between 0 and total.
+                                </small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total</strong></td>
+                            <td>$ {{ getDiscountedTotal() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div [hidden]="isInfo">
+                    <label for="typeahead-template-p">Add an item:</label>
+                    <input [hidden]="isInfo" id="typeahead-template-p" type="text" class="form-control" [(ngModel)]="prodSearchModel" [ngbTypeahead]="searchProduct"
+                    [resultTemplate]="prt" [inputFormatter]="formatter" formControlName="items" (selectItem)="productSelected($event)"/>
+                    <ng-template #prt let-r="result" let-t="term">
+                        <span><i>Id: </i> {{ r.id }}, </span>
+                        <span><i>Name: </i> {{ r.name }} </span>
+                    </ng-template>
+                    <button style="margin-top: 10px" [hidden]="isInfo" class="btn btn-sm btn-primary" (click)="save()"><i class="fa fa-save"> Save</i></button>   
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

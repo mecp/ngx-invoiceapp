@@ -1,0 +1,43 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+    <div class="card-heading clearfix">
+        <h4 class="card-header pull-left" style="padding-top: 7.5px;">Invoices ({{invoices.length}})</h4>
+        <div class="btn-group pull-right">
+            <a class="btn btn-sm btn-primary" routerLink="/invoice"><i class="fa fa-pencil"></i> New Invoice</a>
+        </div>
+    </div>
+
+    <div class="card-block">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-default">
+                <tr>
+                    <th>Invoice Id</th>
+                    <th>Customer Name</th>
+                    <th>Discount</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="invoices.length === 0">
+                <tr>
+                    <td colspan="5">There are no invoices in the DB.</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr *ngFor="let invoice of invoices">
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ (customers[invoice.customer_id + ''] | async)?.name }}</td>
+                    <td>{{ invoice.discount }}</td>
+                    <td>{{ invoice.total }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" (click)="view(invoice)"><i class="fa fa-file"></i> View</button>
+                        <button class="btn btn-sm btn-danger" (click)="delete(invoice)"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

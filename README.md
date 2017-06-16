@@ -3,16 +3,42 @@
 - sqlite3
 - node
 - npm
+- Angular CLI: Install by `npm i -g @angular/cli`
 
 # Getting Started
 
-###### Install npm dependencies
-`npm install`
+##### 1. Install npm dependencies
+`$ npm install`
 
-###### Run the node server
-`node app.js`
+##### 2. Build Angular 4 Client App
+- Without production mode:
 
-###### Viewing the application in your browser
+    ```sh
+    $ ng build
+    ```
+
+- With production mode enabled: 
+
+    ```sh
+    $ ng build -prod
+    ```
+
+- With AoT Compilation: 
+
+    ```sh
+    $ ng build -aot
+    ```
+
+- With AoT and production mode: 
+
+    ```sh
+    $ ng build -aot -prod
+    ```
+
+##### 3. Run the node server
+`$ node app.js`
+
+##### 4. Viewing the application in your browser
 `http://localhost:8000`
 
 # Schema

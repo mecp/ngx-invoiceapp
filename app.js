@@ -77,6 +77,11 @@ InvoiceItem = sequelize.define('invoice_items', {
   }
 });
 
+InvoiceItem.truncate();
+Invoice.truncate();
+Product.truncate();
+Customer.truncate();
+
 sequelize.sync().then(function() {
   Customer.create({
     name: "Mark Benson",
@@ -169,7 +174,6 @@ app.route('/api/customers/:customer_id')
   });
 
 // PRODUCTS API
-
 app.route('/api/products')
   .get(function(req, res) {
     Product.findAll().then(function(products) {
@@ -216,6 +220,11 @@ app.route('/api/invoices')
   .post(function(req, res) {
     var invoice = Invoice.build(_.pick(req.body, ['customer_id', 'discount', 'total']));
     invoice.save().then(function(invoice){
+      for(let item of req.body.items) {
+        var invoice_item = InvoiceItem.build(_.pick(item, ['product_id', 'quantity']));
+        invoice_item.set('invoice_id', invoice.id);
+        invoice_item.save();
+      }
       res.json(invoice);
     });
   });
@@ -235,6 +244,13 @@ app.route('/api/invoices/:invoice_id')
   })
   .delete(function(req, res) {
     Invoice.findById(req.params.invoice_id).then(function(invoice) {
+      InvoiceItem.findAll({where: { invoice_id: invoice.id }}).then(function(invoice_items) {
+        for(let item of invoice_items) {
+          InvoiceItem.findById(item.id).then(function(invoice_item) {
+            invoice_item.destroy();
+          });
+        }
+      });
       invoice.destroy().then(function(invoice) {
         res.json(invoice);
       });
@@ -279,6 +295,59 @@ app.route('/api/invoices/:invoice_id/items/:id')
     });
   });
 
+app.route('/api/search')
+  .get(function(req, res) {
+    let searchStr = req.query.q;
+    if(searchStr) {
+      let type = req.query.resourceType;
+      if(type === 'product') {
+        Product.findAll({
+          attributes: ['id', 'name', 'price'],
+          where: {
+            $or:[
+              {
+                id:{
+                  $like: '%' + searchStr + '%'
+                }
+              },
+              Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')),
+              {
+                $like: '%' + searchStr + '%'
+              })
+            ]
+          }
+        }).then((results) => { res.json(results); });
+      } else if (type === 'customer') {
+        Customer.findAll({
+          attributes: ['id', 'name', 'address', 'phone'],
+          where: {
+            $or:[
+              {
+                id:{
+                  $like: '%' + searchStr + '%'
+                }
+              },
+              Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')),
+              {
+                $like: '%' + searchStr + '%'
+              }),
+              Sequelize.where(Sequelize.fn('lower', Sequelize.col('address')),
+              {
+                $like: '%' + searchStr + '%'
+              }),
+              {
+                phone:{
+                  $like: '%' + searchStr + '%'
+                }
+              }
+            ]
+          }
+        }).then((results) => { res.json(results); });
+      } else {
+        res.json([]);
+      }
+    }
+  });
 
 // Redirect all non api requests to the index
 app.get('*', function(req, res) {

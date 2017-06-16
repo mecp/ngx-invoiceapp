@@ -15,4 +15,21 @@ export class InvoiceService {
   getInvoices(): Observable<any> {
     return this.http.get('/api/invoices').map(res => res.json());
   }
+
+  getInvoice(id): Observable<any> {
+    return this.http.get(`/api/invoices/${id}`).map(res => res.json());
+  }
+
+  getInvoiceItems(id): Observable<any> {
+    return this.http.get(`/api/invoices/${id}/items`).map(res => res.json());
+  }
+
+  addInvoice(invoice): Observable<any> {
+    const body = JSON.stringify(invoice);
+    return this.http.post('/api/invoices', body, this.options).map(res => res.json());
+  }
+
+  deleteInvoice(invoice_id): Observable<any> {
+    return this.http.delete(`/api/invoices/${invoice_id}`).map(res => res.json());
+  }
 }
