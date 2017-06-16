@@ -38,6 +38,8 @@
 ##### 3. Run the node server
 `$ node app.js`
 
+***Note:*** DB is truncated upon starting the server, so any changes made will be lost after server restart.
+
 ##### 4. Viewing the application in your browser
 `http://localhost:8000`
 
