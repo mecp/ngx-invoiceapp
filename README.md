@@ -41,7 +41,7 @@
 ***Note:*** DB is truncated upon starting the server, so any changes made will be lost after server restart.
 
 ##### 4. Viewing the application in your browser
-`http://localhost:8000`
+Open `http://localhost:8000` in the browser and start creating invoices.
 
 # Schema
 
